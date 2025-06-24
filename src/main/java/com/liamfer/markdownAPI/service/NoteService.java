@@ -1,7 +1,10 @@
 package com.liamfer.markdownAPI.service;
 
+import com.liamfer.markdownAPI.DTO.renderedHtmlResponse;
 import com.liamfer.markdownAPI.domain.NoteEntity;
 import com.liamfer.markdownAPI.repository.NoteRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -17,6 +20,14 @@ public class NoteService {
         this.noteRepository = noteRepository;
         this.grammarService = grammarService;
         this.flexmarkService = flexmarkService;
+    }
+
+    public Page<NoteEntity> getNotes(Pageable pageable){
+        return noteRepository.findAll(pageable);
+    }
+
+    public renderedHtmlResponse getRenderedHtml(Long id){
+        return new renderedHtmlResponse(noteRepository.findById(id).get().html);
     }
 
     public String checkGrammar(MultipartFile file){
