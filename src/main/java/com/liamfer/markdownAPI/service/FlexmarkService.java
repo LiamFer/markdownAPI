@@ -15,8 +15,8 @@ public class FlexmarkService {
         this.renderer = renderer;
     }
 
-    public String renderHtml(){
-        Node document = parser.parse("This is *Sparta*");
+    public String renderHtml(String markdown){
+        Node document = parser.parse(markdown);
         return renderer.render(document);
     }
 

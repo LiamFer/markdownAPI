@@ -1,26 +1,31 @@
 package com.liamfer.markdownAPI.controller;
 
-import com.liamfer.markdownAPI.DTO.markdownGrammarDTO;
 import com.liamfer.markdownAPI.domain.NoteEntity;
-import com.liamfer.markdownAPI.service.GrammarService;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.liamfer.markdownAPI.service.NoteService;
+import jakarta.validation.Valid;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
 
 @RestController
 @RequestMapping("/notes")
 public class NoteController {
-    @Autowired
-    private GrammarService grammarService;
+    private final NoteService noteService;
+
+    public NoteController(NoteService noteService) {
+        this.noteService = noteService;
+    }
 
     @PostMapping()
-    public ResponseEntity<?> addNote(){
-        return ResponseEntity.ok("");
+    public ResponseEntity<NoteEntity> addNote(@RequestParam("title") @Valid String title,@RequestParam("markdown") @Valid MultipartFile file){
+        return ResponseEntity.status(HttpStatus.CREATED).body(noteService.saveNote(title,file));
     }
 
     @PostMapping("/grammar-check")
-    public ResponseEntity<String> checkGrammar(@RequestBody markdownGrammarDTO markdown){
-        return ResponseEntity.ok(grammarService.check(markdown.markdown()));
+    public ResponseEntity<String> checkGrammar(@RequestParam("markdown") @Valid MultipartFile file){
+        return ResponseEntity.ok(noteService.checkGrammar(file));
     }
 
     @GetMapping
