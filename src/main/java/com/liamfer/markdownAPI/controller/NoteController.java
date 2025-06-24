@@ -1,12 +1,17 @@
 package com.liamfer.markdownAPI.controller;
 
+import com.liamfer.markdownAPI.DTO.markdownGrammarDTO;
 import com.liamfer.markdownAPI.domain.NoteEntity;
+import com.liamfer.markdownAPI.service.GrammarService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/notes")
 public class NoteController {
+    @Autowired
+    private GrammarService grammarService;
 
     @PostMapping()
     public ResponseEntity<?> addNote(){
@@ -14,8 +19,8 @@ public class NoteController {
     }
 
     @PostMapping("/grammar-check")
-    public ResponseEntity<?> checkGrammar(){
-        return ResponseEntity.ok("");
+    public ResponseEntity<String> checkGrammar(@RequestBody markdownGrammarDTO markdown){
+        return ResponseEntity.ok(grammarService.check(markdown.markdown()));
     }
 
     @GetMapping
